@@ -1,0 +1,11 @@
+{
+    "name": "web-server-fleet-abstraction",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^16"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/azure-native": "v2.0.0"
+    }
+}
