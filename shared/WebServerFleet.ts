@@ -1,15 +1,15 @@
 import { compute, network } from "@pulumi/azure-native";
 import { ComponentResource, ComponentResourceOptions, Input } from "@pulumi/pulumi";
-import { ServerOperatingSystem, ServerSizeTypes } from "./enums";
+import { ServerOperatingSystem, ServerSize } from "./enums";
 
 export class WebServerFleet extends ComponentResource {
     constructor(name: string, args: WebServerFleetArgs, opts?: ComponentResourceOptions) {
         super("zbchht:webServer:WebServerFleet", name, args, opts);
 
         args.machines.forEach((machine) => {
-            for (let i = 0; i < machine.count; i++) {
+            for (let vmIndex = 0; vmIndex < machine.count; vmIndex++) {
 
-                const nic = new network.NetworkInterface(`nic-${machine.os.offer}-${i}`, {
+                const nic = new network.NetworkInterface(`nic-${machine.os.offer}-${vmIndex}`, {
                     resourceGroupName: args.resourceGroupName,
                     ipConfigurations: [{
                         name: "webserveripcfg",
@@ -24,7 +24,7 @@ export class WebServerFleet extends ComponentResource {
                 });
 
                 // Create an Ubuntu Virtual Machine
-                new compute.VirtualMachine(`vm-${machine.os.offer}-${i}`, {
+                new compute.VirtualMachine(`vm-${machine.os.offer}-${vmIndex}`, {
                     resourceGroupName: args.resourceGroupName,
                     networkProfile: {
                         networkInterfaces: [{
@@ -68,6 +68,6 @@ export interface WebServerFleetArgs {
 }
 interface ServerArgs {
     os: ServerOperatingSystem;
-    size: ServerSizeTypes;
+    size: ServerSize;
     count: Input<number>;
 }

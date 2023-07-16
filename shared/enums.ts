@@ -1,4 +1,8 @@
-export const ServerSizeTypes = {
+interface ServerSizeType {
+    vmSize: string;
+    diskSizeGB: number;
+}
+export const ServerSize: { [key: string]: ServerSizeType } = {
     small: {
         vmSize: "Standard_A1",
         diskSizeGB: 100
@@ -16,9 +20,15 @@ export const ServerSizeTypes = {
         diskSizeGB: 150
     }
 } as const;
-export type ServerSizeTypes = (typeof ServerSizeTypes)[keyof typeof ServerSizeTypes];
+export type ServerSize = (typeof ServerSize)[keyof typeof ServerSize];
 
-export const ServerOperatingSystem = {
+interface ServerOperatingSystemType {
+    publisher: string;
+    offer: string;
+    sku: string;
+    startupScript: string;
+}
+export const ServerOperatingSystem: { [key: string]: ServerOperatingSystemType } = {
     ubuntu: {
         publisher: "canonical",
         offer: "UbuntuServer",
@@ -33,7 +43,7 @@ export const ServerOperatingSystem = {
             - systemctl start nginx
         `,
     },
-    //TODO: Fix startup
+    //TODO: Fix startup script
     centOs: {
         publisher: "OpenLogic",
         offer: "CentOS",
@@ -43,31 +53,24 @@ export const ServerOperatingSystem = {
         #cloud-config
         packages:
             - nginx
-        write_files:
-            - path: /etc/yum.repos.d/nginx.repo
-                content: |
-                    [nginx]
-                    name=nginx repo
-                    baseurl=http://nginx.org/packages/mainline/rhel/$releasever/$basearch/
-                    gpgcheck=0
-                    enabled=1
         runcmd:
-            - yum -y install epel-release
             - systemctl enable nginx
             - systemctl start nginx
         `,
     },
-    //TODO: Fix startup
+    //TODO: Fix startup script
     redHat: {
         publisher: "RedHat",
         offer: "RHEL",
         sku: "8-LVM",
         startupScript: 
         `
-        #!/bin/bash
-        yum -y install nginx
-        systemctl enable nginx
-        systemctl start nginx
+        #cloud-config
+        packages:
+            - nginx
+        runcmd:
+            - systemctl enable nginx
+            - systemctl start nginx
         `,
     }
 } as const;

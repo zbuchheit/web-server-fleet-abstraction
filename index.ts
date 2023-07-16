@@ -1,9 +1,7 @@
 import * as resources from "@pulumi/azure-native/resources";
 import * as network from "@pulumi/azure-native/network";
-import * as compute from "@pulumi/azure-native/compute";
 import {WebServerFleet} from "./shared/WebServerFleet";
-import { ServerOperatingSystem, ServerSizeTypes } from "./shared/enums";
-import { getResourceGroupOutput } from "@pulumi/azure-native/resources/getResourceGroup";
+import { ServerOperatingSystem, ServerSize } from "./shared/enums";
 
 // Create an Azure Resource Group
 const resourceGroup = new resources.ResourceGroup("resourceGroup");
@@ -21,11 +19,11 @@ const subnet = new network.Subnet("subnet", {
     addressPrefix: "10.0.1.0/24",
 });
 
-const webServerFleet = new WebServerFleet("webserver-fleet", {
+new WebServerFleet("webserver-fleet", {
     machines: [
-        {count: 1, os: ServerOperatingSystem.ubuntu, size: ServerSizeTypes.small},
-        {count: 2, os: ServerOperatingSystem.centOs, size: ServerSizeTypes.medium},
-        {count: 1, os: ServerOperatingSystem.redHat, size: ServerSizeTypes.medium},
+        {count: 1, os: ServerOperatingSystem.ubuntu, size: ServerSize.small},
+        {count: 2, os: ServerOperatingSystem.centOs, size: ServerSize.medium},
+        {count: 1, os: ServerOperatingSystem.redHat, size: ServerSize.medium},
     ],
     resourceGroupName: resourceGroup.name,
     subnets: [
